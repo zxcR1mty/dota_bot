@@ -4,10 +4,9 @@ import requests
 
 app = Flask(__name__)
 
-# Токен из переменной окружения (на Render)
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 if not BOT_TOKEN:
-    raise ValueError("Токен не найден! Добавь TELEGRAM_BOT_TOKEN в переменные окружения.")
+    raise ValueError("Токен не найден!")
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
@@ -44,7 +43,9 @@ def send_message(chat_id, text, reply_markup=None):
     }
     if reply_markup:
         payload["reply_markup"] = reply_markup
-    requests.post(f"{TELEGRAM_API}/sendMessage", json=payload)
+    # Улучшенный метод: Меряем ответ, чтобы бот не падал
+    response = requests.post(f"{TELEGRAM_API}/sendMessage", json=payload)
+    print("Telegram Response:", response.json())  # Логируем ответ в Render
 
 def get_main_keyboard():
     return {
@@ -59,7 +60,7 @@ def get_main_keyboard():
         ]
     }
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return "Bot is running!", 200
 
