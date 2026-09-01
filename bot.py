@@ -43,9 +43,8 @@ def send_message(chat_id, text, reply_markup=None):
     }
     if reply_markup:
         payload["reply_markup"] = reply_markup
-    # Улучшенный метод: Меряем ответ, чтобы бот не падал
     response = requests.post(f"{TELEGRAM_API}/sendMessage", json=payload)
-    print("Telegram Response:", response.json())  # Логируем ответ в Render
+    print("Telegram Response:", response.json())  # Логируем в Render
 
 def get_main_keyboard():
     return {
